@@ -53,7 +53,58 @@
 	  </div>
 	</nav>
 
-	<div class="container" style="margin-top: 150px">
+	<div class="container">
+      <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+        <?php
+          $resultadoConsulta = mysqli_query($db, "SELECT * FROM `usuarios` WHERE nombreusuario = '$usuario'");
+          $usuarioGeneral = mysqli_fetch_assoc($resultadoConsulta);
+        ?>
+          <div class="panel panel-info" style="margin-top: 20%">
+            <div class="panel-heading">
+              <h3 class="panel-title"><?php echo"$usuario";?></h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="perfil.jpg" class="img-circle img-responsive"> </div>
+              <div class=" col-md-9 col-lg-9 "> 
+                  <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>Usuario</td>
+                        <td><?php echo $usuarioGeneral['nombreusuario']?></td>
+                      </tr>
+                      <tr>
+                        <td>Edad</td>
+                        <td><?php echo $usuarioGeneral['edad']?></td>
+                      </tr>
+                      <tr>
+                        <td>Género</td>
+                        <td><?php 
+                            if($usuarioGeneral['sexo'] == "M")
+                              echo 'Masculino';
+                            else if ($usuarioGeneral['sexo'] == "F")
+                             echo "Femenino";
+                            else echo "Otro";
+                        ?></td>
+                     <tr>
+                        <td>Email</td>
+                        <td><?php echo $usuarioGeneral['nombreusuario'].'@melomanos.es'?></td>
+                      </tr>
+                        <td>Descripción</td>
+                        <td><?php echo $usuarioGeneral['descripcion']?></td>
+                           
+                      </tr>
+                     
+                    </tbody>
+                  </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+	<!--<div class="container" style="margin-top: 150px">
 		<div class="row">
 		<div class="profile-head">
 	        <div class="profiles col-xs-8 col-xs-push-2  col-sm-10 col-sm-push-1 thumbnail">
@@ -105,7 +156,7 @@
 
 	        </div>
 		</div>
-	</div>
+	</div>-->
 
 <?php
     mysqli_close($db);
