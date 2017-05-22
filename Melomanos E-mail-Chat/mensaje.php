@@ -10,7 +10,7 @@
 	<?php 
 		$usuario = $_SESSION['usuario'];
 		$idMensaje = urldecode($_GET['id']);
-		echo "<title> ID del mensaje: $idMensaje </title> ";
+		echo "<title> ID $idMensaje </title> ";
 	?>
  
   <meta charset="utf-8">
@@ -54,35 +54,45 @@
 	  </div>
 	</nav>
 	
-    <div class="jumbotron" style="background: #F8F8F8;
-				box-shadow: 0 3px 3px rgba(0, 0, 0, .1);
-				height: 470px;
-				left: 50%;
-				margin-left: -200px;
-				margin-top: -200px;
-				position: absolute;
-				top: 50%;
-				width: 400px;
-				padding:30px ">
-	
-    	<p><h3>Para:</h3>
-	    	<?php  $uno = "SELECT * from mensajes WHERE emisor = '$usuario' AND id_mensaje = '$idMensaje'";
-	                $consulta = mysqli_query($db, $uno);
-	                $array = mysqli_fetch_assoc($consulta);
-	            	if($consulta && $array)
-						echo '<h4>'.$array['receptor'].'</h4>';
-	       ?>
-	     </p>
-        <p><h3>Asunto:</h3>
-      		<?php echo '<h4>'.$array['asunto'].'<h4>';
-          	?>
-       	 </p>
-       	<p><h3>Mensaje:</h3></p>
-           <?php echo '<h4>'.$array['mensaje'].'</h4>';
-           ?> 
-      
+	<div class="container">
+      <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+        <?php
+          $resultadoConsulta = mysqli_query($db, "SELECT * FROM mensajes WHERE id_mensaje = '$idMensaje'");
+          $mensaje = mysqli_fetch_assoc($resultadoConsulta);
+        ?>
+          <div class="panel panel-info" style="margin-top: 20%">
+            <div class="panel-heading">
+              <h3 class="panel-title"><?php echo"Mensaje ID $idMensaje";?></h3>
+            </div>
+            <div class="panel-body">
+              <div class=" col-md-9 col-lg-9 "> 
+                  <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>De</td>
+                        <td><?php echo $mensaje['emisor']?></td>
+                      </tr>
+                      <tr>
+                        <td>Destinatario</td>
+                        <td><?php echo $mensaje['receptor']?></td>
+                      </tr>
+                      <tr>
+                        <td>Asunto</td>
+                        <td><?php echo $mensaje['asunto']?></td>
+                      </tr>
+                      <tr>
+                        <td>Mensaje</td>
+                        <td><?php echo $mensaje['mensaje']?></td>
+                           
+                      </tr>
+                     
+                    </tbody>
+                  </table>
+          </div>
+      </div>
+      </div>
     </div>
-
 
 <?php
     mysqli_close($db);
