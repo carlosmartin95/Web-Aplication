@@ -53,7 +53,7 @@
 
 	<div id="content">
     <div class="container">
-      <form id="login" action="admin.php" method="post" accept-charset='UTF-8' style="height: 420">
+      <form id="login" action="admin.php" method="post" accept-charset='UTF-8' style="height: 420px">
         <input type='hidden' name='form-name' value='NuevoMensaje'>
           <div id="login_content" class="login_content">
           

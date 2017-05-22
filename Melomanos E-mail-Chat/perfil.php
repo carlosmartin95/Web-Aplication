@@ -91,11 +91,23 @@
                         <td>Email</td>
                         <td><?php echo $usuarioGeneral['nombreusuario'].'@melomanos.es'?></td>
                       </tr>
+                     <tr>
+                      <td>Grupo</td>
+                      <td><?php echo $usuarioGeneral['grupo']?></td>
+                    </tr>
+                    <tr>
+                      <td>Musica</td>
+                      <td><?php 
+                          $musiquita = $usuarioGeneral['grupo'];
+                          $consultaMusica = mysqli_query($db, "SELECT musica from grupos where grupo = '$musiquita'");
+                          $musica = mysqli_fetch_assoc($consultaMusica);
+                          echo $musica["musica"];
+                          ?></td>
+                    </tr>
                         <td>Descripción</td>
                         <td><?php echo $usuarioGeneral['descripcion']?></td>
-                           
                       </tr>
-                     
+                    
                     </tbody>
                   </table>
           </div>

@@ -84,12 +84,12 @@
 				          $edad = $_POST['edad'];
 				          $grupo = $_POST['grupo'];
 
-				          	if( $descripcion != "" && !empty($usuario) && !empty($password) && !empty($sexo) && !empty($edad) && !empty($grupo)){
+				          	if( !empty($descripcion) && !empty($usuario) && !empty($password) && !empty($sexo) && !empty($edad) && !empty($grupo)){
 
-				          		  $consultaEdades = mysqli_query($db, "SELECT edadMin, edadMax FROM `grupos` WHERE grupo ='$grupo'");
-				          		  $chekeoEdad = mysqli_fetch_assoc($db, $consultaEdades);
-
-				          		  if( $checkeoEdad['edadMin'] <= $edad || $checkeoEdad['edadMax'] >= $edad){
+				          		  $consultaEdades = mysqli_query($db, "SELECT * FROM grupos WHERE grupo ='$grupo'");
+				          		  $chekeoEdad = mysqli_fetch_assoc($consultaEdades);
+				          		  
+				          		  if($chekeoEdad['edadMax'] >= $edad && $chekeoEdad['edadMin'] <= $edad){
 					          		  $_SESSION['usuario'] = $usuario;
 							          $checkUser = mysqli_query($db, "SELECT nombreusuario FROM `usuarios` WHERE nombreusuario = '$usuario'");
 						              if(mysqli_num_rows($checkUser) >= 1)
@@ -104,7 +104,10 @@
 								          else echo "<script type='text/javascript'>alert( Error al realizar el registro, Intentelo de nuevo')</script>";
 							      	  }
 							      }
-							      else echo "<script type='text/javascript'>alert('Tu edad no está aceptada por el grupo que has seleccionado')</script>";
+							      else {echo "<script type='text/javascript'>alert('Tu edad no está aceptada por el grupo que has seleccionado')</script>";
+							      		echo $checkeoEdad['edadMin'];
+				          		  echo $checkeoEdad['edadMax'];
+							  }
 							}
 							else echo "<script type='text/javascript'>alert('Porfavor, rellene los campos obligatorios (*)')</script>";
 						}
