@@ -51,12 +51,12 @@
 		                     <label for="descripcion" style="color: black">Descripción*</label>
 		                 </span>
 		            	<span>
-		                	 <label for="grupo" style="color: black">Grupos</label>
-		                     <select class="form-control" name="grupo" style="background-color: #FFF9C4">
-		                     	 <?php $uno = "SELECT grupo from grupos";
+		                	 <label for="grupo" style="color: black">Musica</label>
+		                     <select class="form-control" name="gusto" style="background-color: #FFF9C4">
+		                     	 <?php $uno = "SELECT gusto from gusto";
 					                    $consulta = mysqli_query($db, $uno);
 					                while ($fila = mysqli_fetch_assoc($consulta)){
-					                    echo '<option>'.$fila["grupo"];   
+					                    echo '<option>'.$fila["gusto"];   
 					                }
 						          ?>
 		                     </select>
@@ -64,9 +64,9 @@
 	                  	<span>
 	                  		 <label for="sexo" style="color: black">Sexo</label>
 	                  		 <select class="form-control" name="sexo" style="background-color: #FFF9C4">
-	                  		 	<option>Male</option>
-			                    <option>Female</option>
-			                    <option>Other</option>
+	                  		 	<option>Hombre</option>
+			                    <option>Mujer</option>
+			                    <option>Otro</option>
 	                  		 </select>
 	                  	 </span>	
 		               </div>
@@ -75,39 +75,34 @@
 					</div>
 					 <?php
 				        echo "<br><br>";
-				        if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['edad']) && isset($_POST['sexo']) && isset($_POST['descripcion']) && isset($_POST['grupo']) ){
+				        if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['edad']) && isset($_POST['sexo']) && isset($_POST['descripcion']) && isset($_POST['gusto']) ){
 				         
 				          $usuario = $_POST['username'];
 				          $password = $_POST['password'];
 				          $sexo = $_POST['sexo'];
 				          $descripcion = $_POST['descripcion'];
 				          $edad = $_POST['edad'];
-				          $grupo = $_POST['grupo'];
+				          $gusto = $_POST['gusto'];
+				          $_SESSION['usuario'] = $usuario;
 
-				          	if( !empty($descripcion) && !empty($usuario) && !empty($password) && !empty($sexo) && !empty($edad) && !empty($grupo)){
+				          	if( !empty($descripcion) && !empty($usuario) && !empty($password) && !empty($sexo) && !empty($edad) && !empty($gusto)){
 
-				          		  $consultaEdades = mysqli_query($db, "SELECT * FROM grupos WHERE grupo ='$grupo'");
+				          		  $consultaEdades = mysqli_query($db, "SELECT * FROM grupos WHERE grupo ='$gusto'");
 				          		  $chekeoEdad = mysqli_fetch_assoc($consultaEdades);
 				          		  
-				          		  if($chekeoEdad['edadMax'] >= $edad && $chekeoEdad['edadMin'] <= $edad){
-					          		  $_SESSION['usuario'] = $usuario;
-							          $checkUser = mysqli_query($db, "SELECT nombreusuario FROM `usuarios` WHERE nombreusuario = '$usuario'");
-						              if(mysqli_num_rows($checkUser) >= 1)
-						            	echo "<script type='text/javascript'>alert('El nombre de usuario ya existe!')</script>";
-						              else {  mysqli_query($db, "INSERT INTO usuarios VALUES('$usuario','$password','$edad', '$grupo', '$descripcion','$sexo')");
-							            
-								          $checkRegistro = mysqli_query($db, "SELECT nombreusuario FROM `usuarios` WHERE nombreusuario = '$usuario'");
-							              if(mysqli_num_rows($checkRegistro) >= 1){
-							              		echo "<script type='text/javascript'>alert('Registro con éxito!')</script>";
-							              		echo '<script>window.location = "main.php" </script>';
-							              }
-								          else echo "<script type='text/javascript'>alert( Error al realizar el registro, Intentelo de nuevo')</script>";
-							      	  }
-							      }
-							      else {echo "<script type='text/javascript'>alert('Tu edad no está aceptada por el grupo que has seleccionado')</script>";
-							      		echo $checkeoEdad['edadMin'];
-				          		  echo $checkeoEdad['edadMax'];
-							  }
+						          $checkUser = mysqli_query($db, "SELECT nombreusuario FROM `usuarios` WHERE nombreusuario = '$usuario'");
+					              if(mysqli_num_rows($checkUser) >= 1)
+					            	echo "<script type='text/javascript'>alert('El nombre de usuario ya existe!')</script>";
+					              else {  mysqli_query($db, "INSERT INTO usuarios VALUES('$usuario','$password','$edad', '$gusto', '$descripcion','$sexo')");
+						            
+							          $checkRegistro = mysqli_query($db, "SELECT nombreusuario FROM `usuarios` WHERE nombreusuario = '$usuario'");
+						              if(mysqli_num_rows($checkRegistro) >= 1){
+						              		echo "<script type='text/javascript'>alert('Registro con éxito!')</script>";
+						              		echo '<script>window.location = "main.php" </script>';
+						              }
+							          else echo "<script type='text/javascript'>alert( Error al realizar el registro, Intentelo de nuevo')</script>";
+						      	  }
+							      
 							}
 							else echo "<script type='text/javascript'>alert('Porfavor, rellene los campos obligatorios (*)')</script>";
 						}

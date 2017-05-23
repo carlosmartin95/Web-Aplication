@@ -66,7 +66,7 @@
               <h3 class="panel-title"><?php echo"Mensaje ID $idMensaje";?></h3>
             </div>
             <div class="panel-body">
-              <div class=" col-md-9 col-lg-9 "> 
+              <div class=" col-md-15 col-lg-9 "> 
                   <table class="table table-user-information">
                     <tbody>
                       <tr>
@@ -84,7 +84,14 @@
                       <tr>
                         <td>Mensaje</td>
                         <td><?php echo $mensaje['mensaje']?></td>
-                           
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>
+                          <?php if($mensaje['emisor'] != $usuario) {?>
+                              <a class="btn btn-info" href="NuevoMensaje.php?responder=true&emisor=<?php echo $mensaje['emisor'];?>&asunto=<?php echo $mensaje['asunto'];?>">Responder</a>
+                          <?php } ?>
+                        </td>
                       </tr>
                      
                     </tbody>
@@ -100,6 +107,6 @@
 </body>
 
 	<!-- Scripts -->
-  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-  	<script src="js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 </html>

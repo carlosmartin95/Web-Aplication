@@ -9,6 +9,12 @@
 <head>
   <?php 
     $usuario = $_SESSION['usuario'];
+    if(isset($_GET['responder']) && isset($_GET['emisor']) && isset($_GET['asunto'])){
+      $responder = True;
+      $usuarioResponder = $_GET['emisor'];
+      $asuntoResponder = $_GET['asunto'];
+    }
+    else $responder = False;
     echo "<title> $usuario </title> ";
   ?>
  
@@ -62,25 +68,42 @@
           
           <label>Para*</label>
           <select class="form-control" name="para" id="sel1">
-            <option>Todos</option>
-            <option disabled style="color: black;">Usuarios:</option>
-            <?php  $uno = "SELECT nombreusuario from usuarios ORDER BY nombreusuario";
-                    $consulta = mysqli_query($db, $uno);
-                while ($fila = mysqli_fetch_assoc($consulta)){
-                    echo '<option>'.$fila["nombreusuario"];   
-                }
-           ?>
-           <option disabled style="color: black;">Grupos:</option>
-           <?php  $dos = "SELECT grupo from grupos ORDER BY grupo";
+          <?php 
+            if($responder){
+                echo '<option>'.$usuarioResponder;
+            }  
+            else {
+                echo '<option>Todos</option>';
+                echo '<option disabled style="color: black;">Todos los Usuarios:</option>';
+                 $uno = "SELECT nombreusuario from usuarios ORDER BY nombreusuario";
+                 $consulta = mysqli_query($db, $uno);
+                
+                 while ($fila = mysqli_fetch_assoc($consulta)){
+                      echo '<option>'.$fila["nombreusuario"];   
+                 }
+                      
+               
+               echo '<option disabled style="color: black;">Grupos a los que perteneces:</option>';
+                   
+                    $consultaMusica = mysqli_query($db, "SELECT musica, edad from usuarios WHERE nombreusuario = '$usuario'");
+                    $musica = mysqli_fetch_assoc($consultaMusica);
+                    $musiquita = $musica['musica'];
+                    $dos = "SELECT grupo, edadMin, edadMax from grupos WHERE musica = '$musiquita'";
                     $consulta5 = mysqli_query($db, $dos);
-                while ($columna = mysqli_fetch_assoc($consulta5)){
-                    echo '<option>'.$columna["grupo"];   
-                }
-           ?> 
+                    while ($columna = mysqli_fetch_assoc($consulta5)){
+                      if($columna['edadMax'] >= $musica['edad'] && $columna['edadMin'] <= $musica['edad'])
+                        echo '<option>'.$columna['grupo'];
+                    } 
+            }
+          ?>
           </select>
           <div class="form-group">
             <label>Asunto</label>
-            <input type="text" maxlength="50" class="form-control" name="asunto" id="pwd">
+            <?php 
+                if ($responder)
+                  echo '<input type="text" readonly value = "RE:'.htmlspecialchars($asuntoResponder).'" class="form-control" name="asunto" id="pwd">';
+                else echo '<input type="text" maxlength="50" class="form-control" name="asunto" id="pwd">';
+            ?>
           </div>
           <div class="form-group">
             <label>Mensaje*</label>
@@ -90,7 +113,7 @@
             </div>
           </div>
           <?php 
-            if(isset($_POST['mensaje']) && isset($_POST['asunto']) ){
+            if(isset($_POST['mensaje']) && isset($_POST['asunto'])){
                 $mensaje = $_POST['mensaje']; 
                 $asunto = $_POST['asunto'];
                 $para = $_POST['para'];
@@ -100,13 +123,12 @@
                     $grupejos = "SELECT grupo from grupos";
                     $consultaGrupos = mysqli_query($db, $grupejos);
 
-                    while ($listo = mysqli_fetch_assoc($consultaGrupos)) {
+                    while ($listo = mysqli_fetch_assoc($consultaGrupos)){
                       if($para == $listo['grupo'] && $valido){
                           $valido = False;
                       }
                     }
 
-                    //cambiar
                     if($para != "Todos" && !empty($mensaje) && $valido){
                       $insert = "INSERT INTO mensajes (emisor,receptor,asunto,dia,mensaje) VALUES ('$usuario','$para','$asunto', NOW(),'$mensaje')";
                       $resultado = mysqli_query($db, $insert);
@@ -120,34 +142,28 @@
                           $resultado = mysqli_query($db,$insert);
                         }
                     } 
-                    else if (!empty($mensaje)){  
-                       
-                        $checkeo  = "SELECT grupo from usuarios WHERE nombreusuario = '$usuario'";
-                        $consulta4 = mysqli_query($db,$checkeo);
-                        $checkeoFinal = mysqli_fetch_assoc($consulta4);
-                         if ($checkeoFinal['grupo'] == $para && !empty($para)){
-                            $grupos = "SELECT nombreusuario from usuarios WHERE grupo = '$para'";
-                            $consulta3 = mysqli_query($db, $grupos);
-                            // Pasamos dos variables a la siguiente página
-                            while ($array = mysqli_fetch_assoc($consulta3)) {
-                              
-                                $destinatario = $array['nombreusuario'];
-                                $insert = "INSERT INTO mensajes (emisor,receptor,asunto,dia,mensaje) VALUES ('$usuario','$destinatario','$asunto',NOW(),'$mensaje')"; 
-                                $resultado = mysqli_query($db,$insert);
-                            }
-                         }
-                         else { 
-                                echo "<script type='text/javascript'>alert('No puedes enviar mensajes a un grupo al que no pertecenes')</script>";
-                                echo '<script>window.location = "NuevoMensaje.php" </script>';
-                         }
+                    else{  
+                                                                             
+                      $consulta6 = mysqli_query($db, "SELECT nombreusuario,edad from usuarios WHERE musica = '$musiquita'");
+                      $ocho = "SELECT edadMin, edadMax from grupos WHERE grupo = '$para'";
+                      $consulta7 = mysqli_query($db, $ocho);
+                      $array = mysqli_fetch_assoc($consulta7);
+                      while ($todosUsuarios = mysqli_fetch_assoc($consulta6)){
+                        if($array['edadMax'] >= $todosUsuarios['edad'] && $array['edadMin'] <= $todosUsuarios['edad']){
+                           $destinatario = $todosUsuarios['nombreusuario'];
+                           $insert = "INSERT INTO mensajes (emisor,receptor,asunto,dia,mensaje) VALUES ('$usuario','$destinatario','$asunto',NOW(),'$mensaje')"; 
+                           $resultado = mysqli_query($db,$insert);
+                        }
+                      }
                     }
+                    
                     if(isset($resultado) && $resultado){
                         echo "<script type='text/javascript'>alert('Mensaje enviado con éxito!')</script>";
                         echo '<script>window.location = "main.php" </script>';
                     }
                     else echo "<script type='text/javascript'>alert('Error al enviar el mensaje!')</script>";
                 }
-                else echo "<script type='text/javascript'>alert('Rellena el campo 'MENSAJE' antes de enviar')</script>";
+                else echo "<script type='text/javascript'>alert('El campo 'MENSAJE' es obligatorio')</script>";
             }
           ?> 
       </form>
@@ -159,7 +175,6 @@
     mysqli_close($db);
   ?>
 </body>
-
 <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>

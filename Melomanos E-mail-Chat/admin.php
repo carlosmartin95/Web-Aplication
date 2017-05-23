@@ -102,7 +102,7 @@
 					$insertarGrupo = "INSERT INTO grupos VALUES ('$nombreGrupo', '$edadMin', '$edadMax', '$musica')";
 					$insercionGrupo = mysqli_query($db, $insertarGrupo);
 					if($insercionGrupo){
-						echo "<script type='text/javascript'>alert('Inserción con éxito!')</script>";
+						echo "<script type='text/javascript'>alert('Grupo creado con éxito!')</script>";
 					}
 			}
 			else echo "<script type='text/javascript'>alert('Rellena todos los campos')</script>";

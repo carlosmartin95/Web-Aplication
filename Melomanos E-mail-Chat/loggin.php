@@ -54,11 +54,11 @@
 				          if(!empty($usuario) && !empty($password)){
 				            //Pass user to next page
 				            $_SESSION['usuario'] = $usuario;
-				            $checkUser = mysqli_query($db, "SELECT nombreusuario FROM `usuarios` WHERE nombreusuario = '$usuario'");
+				            $checkUser = mysqli_query($db, "SELECT nombreusuario FROM usuarios WHERE nombreusuario = '$usuario'");
 				            //Get password from user in database
-			                $passQuery = mysqli_query($db, "SELECT contrasena FROM `usuarios` WHERE nombreusuario = '$usuario'");
-			                $pwd = mysqli_fetch_object($passQuery);
-			                if($pwd->contrasena!= $password && mysqli_num_rows($checkUser) == 0)
+			                $passQuery = mysqli_query($db, "SELECT contrasena FROM usuarios WHERE nombreusuario = '$usuario'");
+			                $pwd = mysqli_fetch_assoc($passQuery);
+			                if($pwd['contrasena'] != $password 	|| mysqli_num_rows($checkUser) == 0)
 			                  echo "<script type='text/javascript'>alert('Usuario o contraseña incorrectos!')</script>";
 			                else{
 				                //Check if user is administrator

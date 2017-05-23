@@ -92,17 +92,22 @@
                         <td><?php echo $usuarioGeneral['nombreusuario'].'@melomanos.es'?></td>
                       </tr>
                      <tr>
-                      <td>Grupo</td>
-                      <td><?php echo $usuarioGeneral['grupo']?></td>
+                      <td>Musica</td>
+                      <td><?php echo $usuarioGeneral['musica']?></td>
                     </tr>
                     <tr>
-                      <td>Musica</td>
+                      <td>Grupos</td>
                       <td><?php 
-                          $musiquita = $usuarioGeneral['grupo'];
-                          $consultaMusica = mysqli_query($db, "SELECT musica from grupos where grupo = '$musiquita'");
-                          $musica = mysqli_fetch_assoc($consultaMusica);
-                          echo $musica["musica"];
-                          ?></td>
+                          $gusto = $usuarioGeneral['musica'];
+                          $consultaMusica = mysqli_query($db, "SELECT grupo, edadMin, edadMax from grupos where musica = '$gusto'");
+                          echo "<ul>";
+                          while($musica = mysqli_fetch_assoc($consultaMusica)){
+                            if($musica['edadMax'] >= $usuarioGeneral['edad'] && $musica['edadMin'] <= $usuarioGeneral['edad'])
+                              echo '<li>'.$musica["grupo"].'</li>';
+                          }
+                          echo "</ul>";
+                          ?>
+                      </td>
                     </tr>
                         <td>Descripción</td>
                         <td><?php echo $usuarioGeneral['descripcion']?></td>
@@ -115,61 +120,6 @@
       </div>
       </div>
     </div>
-
-
-	<!--<div class="container" style="margin-top: 150px">
-		<div class="row">
-		<div class="profile-head">
-	        <div class="profiles col-xs-8 col-xs-push-2  col-sm-10 col-sm-push-1 thumbnail">
-	          <div class="col-md-3 col-sm-3 col-xs-12">
-	            <div class="row">
-	            <h2>Nombre de Usuario<br><br>
-	            	<?php echo"$usuario";?>
-	            </h2></div>
-	           
-	          	</div>
-
-	          	<div class="col-md-4 col-sm-6 col-xs-12">
-	                     
-	                      <p><h2>Descripción</h2><?php
-	                      		
-	                      		$resultadoConsulta = mysqli_query($db, "SELECT * FROM `usuarios` WHERE nombreusuario = '$usuario'");
-	                      		$usuarioGeneral = mysqli_fetch_assoc($resultadoConsulta);
-
-                      			echo $usuarioGeneral['descripcion'];
-	                      		?>	 
-	                      </p>
-	                      <ul>
-	                      <li><h3>Edad</h3></li>
-	                      <li><?php echo $usuarioGeneral['edad'];		                      		
-		                      	?>	
-						  	</li>
-	                     </ul>
-	            </div>
-
-	            <div class="col-md-4 col-sm-6 col-xs-12">
-
-	                	<p><h2>Grupo</h2>
-	                		<?php echo $usuarioGeneral['grupo'];
-							?>	 
-	                      </p>
-	                      <ul>
-	                      <li><h3>Sexo</h3>
-	                      		<?php
-	                      		if(isset($usuarioGeneral['sexo']))
-		                      			if ($usuarioGeneral['sexo'] == 'M')
-		                      				echo "Masculino";
-		                      			else echo "Femenino";
-		                      	else echo "Edad no disponible";
-		                      	?>	
-						  	</li>
-	                      </ul>
-
-				</div>
-
-	        </div>
-		</div>
-	</div>-->
 
 <?php
     mysqli_close($db);

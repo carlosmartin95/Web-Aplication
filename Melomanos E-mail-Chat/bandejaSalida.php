@@ -79,7 +79,7 @@
 	                    //	echo '<td style = "text-align:left">'.$grupo.'</td>';
 	                   	echo '<td style = "text-align:left">'.$fila["receptor"].'</td>';
 	                    echo '<td style = "text-align:left">'.$fila["asunto"].'</td>';
-	                    echo '<td style = "text-align:left"><a href = "mensaje.php?id='.urldecode($fila['id_mensaje']).'">'.$fila["mensaje"].'</a></td>';
+	                    echo '<td style = "text-align:left"><a href = "mensaje.php?id='.urldecode($fila['id_mensaje']).'">'.substr($fila["mensaje"],0,55)."....".'</a></td>';
 	                    echo '<td style = "text-align:left">'.$fila["dia"].'</td>';
 	                    echo '</tr>';
 	                   
